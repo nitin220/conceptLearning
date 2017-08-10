@@ -16,8 +16,7 @@ libraryDependencies ++= Seq(
   "com.novocode" % "junit-interface" % "0.11" % "test",
   "org.scalanlp" %% "breeze" % "0.13.2",
   "org.scalanlp" %% "breeze-natives" % "0.13.2",
-  "org.scalanlp" %% "breeze-viz" % "0.13.2",
-  "log4j" % "log4j" % "1.2.17"
+  "org.scalanlp" %% "breeze-viz" % "0.13.2"
 )
 
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")

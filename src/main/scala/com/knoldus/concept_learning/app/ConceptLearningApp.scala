@@ -3,9 +3,10 @@ package com.knoldus.concept_learning.app
 import akka.actor.{ActorSystem, Props}
 import akka.pattern._
 import akka.util.Timeout
-import com.knoldus.concept_learning.domains.FindS.{Concept, DataObject}
-import com.knoldus.concept_learning.actors.{GetVersionSpace, CandidateEliminationActor, FindSActor, GetHypothesis}
+import com.knoldus.concept_learning.actors.{CandidateEliminationActor, GetVersionSpace}
+import com.knoldus.concept_learning.domains.FindS.DataObject
 import com.knoldus.concept_learning.domains.{TrainingData, TumorReport}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.util.Random
@@ -16,17 +17,15 @@ object ConceptLearningApp extends App {
 
   implicit val timeout = Timeout(5 seconds)
   val actorSystem = ActorSystem("FindS-ActorSystem")
-  val findSActor = actorSystem.actorOf(Props[FindSActor])
+//  val findSActor = actorSystem.actorOf(Props[FindSActor])
   val candidateEliminationActor = actorSystem.actorOf(Props[CandidateEliminationActor])
-//  val log = Logger.getLogger(this.getClass)
-
   /********************************
     * TRAINING
     ********************************/
 
   val trainingDataSamples: List[TrainingData] = TrainingDataGenerator.generateTrainingData
 
-  println("**************************Start Training************************************")
+  println("**************************Start Training************************************\n\n")
   //Training of actor is being start
   trainingDataSamples foreach { trainingData =>
     println(s"Training data: $trainingData")
@@ -45,8 +44,8 @@ object ConceptLearningApp extends App {
   }*/
   (candidateEliminationActor ? GetVersionSpace) map {
     case (specificSet, generalSet)=>
-      println(s"***************************************** Specific set ${specificSet}")
-      println(s"***************************************** General set ${generalSet}")
+      println(s"***************************************** Specific set $specificSet\n\n")
+      println(s"***************************************** General set $generalSet\n\n")
   }
 
   /*****************************************************
@@ -54,24 +53,24 @@ object ConceptLearningApp extends App {
    ******************************************************/
 
   Thread.sleep(2000)
-  println("*****************************Training finished****************************")
-  println("*****************************Testing****************************")
+  println("*****************************Training finished****************************\n\n")
+  println("*****************************Testing****************************\n\n")
 
   /*(findSActor ? new DataObject("circular", "large", "dark", "smooth")) map {
     case Some(positive: Boolean) => if (positive) {
-      println("Positive.......!!")
+      println("Positive.......!!\n\n")
     } else {
-      println("Negative.......!!")
+      println("Negative.......!!\n\n")
     }
     case msg: String =>
-      println("ERROR: " + msg)
+      log.error("ERROR: " + msg)
   }*/
 
   (candidateEliminationActor ? new DataObject("circular", "large", "light", "smooth")) map {
     case positive: Boolean => if (positive) {
-      println("Positive.......!!")
+      println("Positive.......!!\n\n")
     } else {
-      println("Negative.......!!")
+      println("Negative.......!!\n\n")
     }
   }
 

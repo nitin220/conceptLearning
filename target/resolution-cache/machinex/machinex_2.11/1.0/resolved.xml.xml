@@ -4,7 +4,7 @@
 		module="machinex_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20170810175632"
+		publication="20170810182834"
 	>
 		<description>
 		machinex
@@ -42,6 +42,5 @@
 		<dependency org="org.scalanlp" name="breeze_2.11" rev="0.13.2" conf="compile->default(compile)"/>
 		<dependency org="org.scalanlp" name="breeze-natives_2.11" rev="0.13.2" conf="compile->default(compile)"/>
 		<dependency org="org.scalanlp" name="breeze-viz_2.11" rev="0.13.2" conf="compile->default(compile)"/>
-		<dependency org="log4j" name="log4j" rev="1.2.17" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

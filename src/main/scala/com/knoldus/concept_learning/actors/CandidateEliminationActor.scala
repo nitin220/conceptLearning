@@ -16,19 +16,18 @@ class CandidateEliminationActor extends Actor {
   def receive = {
 
     case trainingData: TrainingData =>
-      println("Processing training data......>>>>>>>", trainingData)
       import trainingData._
       if (result) {
-        println(s"Result : $result, leaning from positive data......")
+        println(s"Result : $result, leaning from positive data......\n\n")
         learnFromPositiveDataObject(trainingData)
       } else {
-        println(s"Result : $result, leaning from negative data......")
+        println(s"Result : $result, leaning from negative data......\n\n")
         learnFromNegativeDataObject(trainingData)
       }
 
     case GetVersionSpace => sender !(specificConcepts, generalConcepts)
 
-    case dataObject: DataObject => sender ! /*Try(*/ predict(dataObject) /*).getOrElse("Incorrect training data")*/
+    case dataObject: DataObject => sender ! predict(dataObject)
   }
 
   private def predict(dataObject: DataObject) = {
@@ -47,8 +46,8 @@ class CandidateEliminationActor extends Actor {
     val generalBoundaryResult = generalConcepts map {
       concept => innerPredict(dataObject, concept)
     }
-    println(s"**************************************************** specificBoundaryResult is $specificBoundaryResult")
-    println(s"**************************************************** generalBoundaryResult is $generalBoundaryResult")
+    println(s"**************************************************** specificBoundaryResult is $specificBoundaryResult \n\n")
+    println(s"**************************************************** generalBoundaryResult is $generalBoundaryResult \n\n")
 
     if (specificBoundaryResult.contains(true) && generalBoundaryResult.contains(true)) {
       sender ! true
@@ -101,17 +100,11 @@ class CandidateEliminationActor extends Actor {
           } else {
             specificConcepts -= concept
             specificConcepts += concept.copy(size = "?")
-            println(s"**************************** minimal generalizing specific layer turning ${
-              concept.size
-            } to  ? ")
             false
           }
         } else {
           specificConcepts -= concept
           specificConcepts += concept.copy(shape = "?")
-          println(s"**************************** minimal generalizing specific layer turning ${
-            concept.shape
-          } to  ? ")
           false
         }
 
