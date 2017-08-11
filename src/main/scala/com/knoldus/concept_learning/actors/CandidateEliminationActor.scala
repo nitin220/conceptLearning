@@ -5,17 +5,19 @@ import com.knoldus.concept_learning.domains.FindS.{DataObject, Concept}
 import com.knoldus.concept_learning.domains.TrainingData
 
 import scala.collection.mutable.ListBuffer
+import scala.util.Try
 
 case object GetVersionSpace
 
 class CandidateEliminationActor extends Actor {
 
-  val specificConcepts = ListBuffer[Concept]() += new Concept("phi", "phi", "phi", "phi")
+  val specificConcepts = ListBuffer[Concept]() += new Concept(" ϕ", " ϕ", " ϕ", " ϕ")
   val generalConcepts = ListBuffer[Concept]() += new Concept("?", "?", "?", "?")
 
   def receive = {
 
     case trainingData: TrainingData =>
+      println(s"Training data: $trainingData")
       import trainingData._
       if (result) {
         println(s"Result : $result, leaning from positive data......\n\n")
@@ -27,7 +29,7 @@ class CandidateEliminationActor extends Actor {
 
     case GetVersionSpace => sender !(specificConcepts, generalConcepts)
 
-    case dataObject: DataObject => sender ! predict(dataObject)
+    case dataObject: DataObject => sender ! Try(predict(dataObject)).getOrElse("Incorrect training data")
   }
 
   private def predict(dataObject: DataObject) = {
@@ -40,19 +42,25 @@ class CandidateEliminationActor extends Actor {
         (if (dataObject.color == concept.color) true else if (concept.color == "?") true else false) &&
         (if (dataObject.surface == concept.surface) true else if (concept.surface == "?") true else false)
     }
-    val specificBoundaryResult = specificConcepts map {
-      concept => innerPredict(dataObject, concept)
-    }
-    val generalBoundaryResult = generalConcepts map {
-      concept => innerPredict(dataObject, concept)
-    }
-    println(s"**************************************************** specificBoundaryResult is $specificBoundaryResult \n\n")
-    println(s"**************************************************** generalBoundaryResult is $generalBoundaryResult \n\n")
 
-    if (specificBoundaryResult.contains(true) && generalBoundaryResult.contains(true)) {
-      sender ! true
-    } else {
-      sender ! false
+    if(specificConcepts.isEmpty || generalConcepts.isEmpty) {
+      throw new Exception("Incorrect training data!")
+    }
+    else {
+      val specificBoundaryResult = specificConcepts map {
+        concept => innerPredict(dataObject, concept)
+      }
+      val generalBoundaryResult = generalConcepts map {
+        concept => innerPredict(dataObject, concept)
+      }
+      println(s"**************************************************** specificBoundaryResult is $specificBoundaryResult \n\n")
+      println(s"**************************************************** generalBoundaryResult is $generalBoundaryResult \n\n")
+
+      if (specificBoundaryResult.contains(true) && generalBoundaryResult.contains(true)) {
+        sender ! true
+      } else {
+        sender ! false
+      }
     }
 
   }
@@ -62,7 +70,7 @@ class CandidateEliminationActor extends Actor {
     import sampleData._
 
     val sampleConcept = new Concept(sample.shape, sample.size, sample.color, sample.surface)
-    val checkSample = new Concept("phi", "phi", "phi", "phi")
+    val checkSample = new Concept(" ϕ", " ϕ", " ϕ", " ϕ")
     if (specificConcepts.contains(checkSample)) {
       maintainGeneralConsistencyForPositive(sampleConcept)
       specificConcepts -= checkSample

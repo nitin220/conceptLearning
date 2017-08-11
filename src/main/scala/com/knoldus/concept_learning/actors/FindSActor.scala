@@ -22,14 +22,14 @@ class FindSActor extends Actor {
         println(s"Result : $result, leaning......")
         learnFrom(trainingData)
       } else {
-        println(s"Ignoring the sample: ${sample}")
+        println(s"Ignoring the sample: $sample")
       }
 
     case GetHypothesis => sender ! conceptOpt
 
     case dataObject: DataObject => sender ! Try(predict(dataObject)).getOrElse("Incorrect training data")
 
-    case msg => println(s"Did not understand the message: ${msg}")
+    case msg => println(s"Did not understand the message: $msg")
 
   }
 

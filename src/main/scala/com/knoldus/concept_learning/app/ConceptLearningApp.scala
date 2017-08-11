@@ -28,7 +28,7 @@ object ConceptLearningApp extends App {
   println("**************************Start Training************************************\n\n")
   //Training of actor is being start
   trainingDataSamples foreach { trainingData =>
-    println(s"Training data: $trainingData")
+//    println(s"Training data: $trainingData")
 //    findSActor ! trainingData
     candidateEliminationActor ! trainingData
   }
@@ -63,7 +63,7 @@ object ConceptLearningApp extends App {
       println("Negative.......!!\n\n")
     }
     case msg: String =>
-      log.error("ERROR: " + msg)
+      println("ERROR: " + msg)
   }*/
 
   (candidateEliminationActor ? new DataObject("circular", "large", "light", "smooth")) map {
@@ -72,6 +72,8 @@ object ConceptLearningApp extends App {
     } else {
       println("Negative.......!!\n\n")
     }
+    case msg: String =>
+      println("ERROR: " + msg)
   }
 
   actorSystem.terminate()
@@ -86,7 +88,7 @@ object TrainingDataGenerator {
   val surface = List("smooth", "irregular")
 
   def generateTrainingData: List[TrainingData] = {
-    /*List.range(0, 2).map { res =>
+   /* List.range(0, 40).map { res =>
        TrainingData(
         TumorReport(shape(random), size(random), color(random), surface(random)),
         if (random == 1) {
