@@ -11,7 +11,7 @@ case object GetVersionSpace
 
 class CandidateEliminationActor extends Actor {
 
-  val specificConcepts = ListBuffer[Concept]() += new Concept(" ϕ", " ϕ", " ϕ", " ϕ")
+  val specificConcepts = ListBuffer[Concept]() += new Concept("ϕ", "ϕ", "ϕ", "ϕ")
   val generalConcepts = ListBuffer[Concept]() += new Concept("?", "?", "?", "?")
 
   def receive = {
@@ -45,13 +45,12 @@ class CandidateEliminationActor extends Actor {
 
     if(specificConcepts.isEmpty || generalConcepts.isEmpty) {
       throw new Exception("Incorrect training data!")
-    }
-    else {
-      val specificBoundaryResult = specificConcepts map {
-        concept => innerPredict(dataObject, concept)
+    } else {
+      val specificBoundaryResult = specificConcepts map { concept =>
+        innerPredict(dataObject, concept)
       }
-      val generalBoundaryResult = generalConcepts map {
-        concept => innerPredict(dataObject, concept)
+      val generalBoundaryResult = generalConcepts map { concept =>
+        innerPredict(dataObject, concept)
       }
       println(s"**************************************************** specificBoundaryResult is $specificBoundaryResult \n\n")
       println(s"**************************************************** generalBoundaryResult is $generalBoundaryResult \n\n")
@@ -70,7 +69,7 @@ class CandidateEliminationActor extends Actor {
     import sampleData._
 
     val sampleConcept = new Concept(sample.shape, sample.size, sample.color, sample.surface)
-    val checkSample = new Concept(" ϕ", " ϕ", " ϕ", " ϕ")
+    val checkSample = new Concept("ϕ", "ϕ", "ϕ", "ϕ")
     if (specificConcepts.contains(checkSample)) {
       maintainGeneralConsistencyForPositive(sampleConcept)
       specificConcepts -= checkSample

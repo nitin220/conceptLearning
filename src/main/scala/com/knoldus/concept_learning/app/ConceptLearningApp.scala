@@ -88,7 +88,7 @@ object TrainingDataGenerator {
   val surface = List("smooth", "irregular")
 
   def generateTrainingData: List[TrainingData] = {
-   /* List.range(0, 40).map { res =>
+    /*List.range(0, 40).map { res =>
        TrainingData(
         TumorReport(shape(random), size(random), color(random), surface(random)),
         if (random == 1) {
